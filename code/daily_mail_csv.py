@@ -12,6 +12,10 @@ from bs4 import BeautifulSoup
 import pandas as pd
 from datetime import datetime, timedelta
 
+# set wd
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
+
 
 
 # Functions:
@@ -48,7 +52,7 @@ def fetch_daily_mail_data(date):
 #------------
 
 file_name = "../data/daily_mail_articles.csv"
-n = 5
+n = 4
 
 
 
@@ -92,6 +96,7 @@ for i in range(n):
 Daily_Mail_df.to_csv(file_name, index=False)
 
 print(f"Scraping complete. Updated {file_name}.")
+print(f"Completed: {len(Daily_Mail_df['date'].unique())} / 365")
 
 
 
