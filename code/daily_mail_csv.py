@@ -53,7 +53,7 @@ def fetch_daily_mail_data(date):
 
 file_name = "../data/daily_mail_articles.csv"
 
-
+# get user input on how many days to search for
 try:
     n=int(input('How many Days worth of Articles?\n'))
 
@@ -67,7 +67,7 @@ except:
 
 
 
-
+# check if csv already exists
 if os.path.exists(file_name):
     Daily_Mail_df = pd.read_csv(file_name)
     last_date = str(Daily_Mail_df['date'].iloc[-1])
@@ -85,6 +85,7 @@ else:
 # step date backwards
 date = step_date_backwards(last_date)
 
+# collect data
 for i in range(n):
     daily_mail_data = fetch_daily_mail_data(date)
     if not daily_mail_data:
@@ -98,8 +99,10 @@ for i in range(n):
                               ignore_index=True)
     Daily_Mail_df.drop_duplicates(subset='title', keep='last', inplace=True)
 
+    # update user
     print(f"Added {len(update_Daily_Mail_df)} new articles for {date}")
     date = step_date_backwards(date)
+    print(f"Completed: {len(Daily_Mail_df['date'].unique())} / 365")
 
 
 
@@ -110,7 +113,6 @@ for i in range(n):
 Daily_Mail_df.to_csv(file_name, index=False)
 
 print(f"Scraping complete. Updated {file_name}.")
-print(f"Completed: {len(Daily_Mail_df['date'].unique())} / 365")
 
 
 
