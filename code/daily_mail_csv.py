@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 Daily Mail Scraper
+
+https://www.dailymail.co.uk/home/sitemaparchive/index.html
+
 """
 
 import os
@@ -45,7 +48,9 @@ def fetch_daily_mail_data(date):
 #------------
 
 file_name = "../data/daily_mail_articles.csv"
-n = 50
+n = 5
+
+
 
 if os.path.exists(file_name):
     Daily_Mail_df = pd.read_csv(file_name)
