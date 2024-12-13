@@ -17,6 +17,10 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
 
+file_name = "../data/daily_mail_articles.csv"
+
+
+
 
 # Functions:
 #-----------
@@ -50,8 +54,6 @@ def fetch_daily_mail_data(date):
 
 # File Setup:
 #------------
-
-file_name = "../data/daily_mail_articles.csv"
 
 # get user input on how many days to search for
 try:
