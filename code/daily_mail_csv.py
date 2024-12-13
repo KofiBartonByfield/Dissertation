@@ -52,7 +52,19 @@ def fetch_daily_mail_data(date):
 #------------
 
 file_name = "../data/daily_mail_articles.csv"
-n = 4
+
+
+try:
+    n=int(input('How many Days worth of Articles?\n'))
+
+except: 
+    print('Please enter an Integer!')
+    try:
+        n=int(input('How many Days worth of Articles?\n'))
+
+    except: 
+        raise SystemExit('Idiot...')
+
 
 
 
@@ -88,6 +100,8 @@ for i in range(n):
 
     print(f"Added {len(update_Daily_Mail_df)} new articles for {date}")
     date = step_date_backwards(date)
+
+
 
 # Save to CSV:
 #-------------
