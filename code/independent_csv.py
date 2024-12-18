@@ -56,7 +56,8 @@ def fetch_independent_data(date):
         articles.append({
             'title': title,
             'url': full_url,
-            'date': date
+            'date': date,
+            'source': 'Independent'
         })
 
     if not articles:
