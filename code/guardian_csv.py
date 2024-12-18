@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Guardian Scraper
 
@@ -9,11 +10,9 @@ https://open-platform.theguardian.com/
 
 
 import requests
-import datetime
-import re
+from datetime import datetime, timedelta
 import pandas as pd
 import os
-import math
 
 
 API_KEY = os.getenv("GUARDIAN_API_KEY")
@@ -26,7 +25,7 @@ articles = []
 if API_KEY:
     print("API Key Loaded Successfully")
 else:
-    print("API Key Not Found")
+    raise SystemExit('API Key Not Found')
     
 # set wd
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -40,7 +39,8 @@ if os.path.exists(file_name):
     last_date = Guardian_df['webPublicationDate'].str[:10].iloc[-1]
 else:
     Guardian_df = pd.DataFrame()
-    last_date = str(datetime.date.today())
+    # last_date = str(datetime.date.today())
+    last_date = '2024-12-18'
     print(f"{file_name} will be created.")
 
 
@@ -56,17 +56,26 @@ params = {
 
 # get user input on how many days to search for
 try:
-    k=int(input('How many Articles?\n'))
+    n=int(input('How many API calls?\n'))
 
 except: 
     print('Please enter an Integer!')
     try:
-        k=int(input('How many Articles?\n'))
+        n=int(input('How many API calls?\n'))
 
     except: 
         raise SystemExit('Idiot...')
 
-n = math.ceil(k/200)
+
+
+
+# Functions:
+#-----------
+
+def step_date_backwards(date_str):
+    """Move date back by one day."""
+    date_obj = datetime.strptime(date_str, '%Y-%m-%d')
+    return (date_obj - timedelta(days=1)).strftime('%Y-%m-%d')
 
 
 
@@ -87,9 +96,10 @@ def scrape_data(last_date):
         # Append all relevant fields to the articles list
         articles.append({
             
-            "webPublicationDate": result.get("webPublicationDate"),
-            "webTitle": result.get("webTitle"),
-            "webUrl": result.get("webUrl"),
+            "Date": result.get("webPublicationDate"),
+            "Title": result.get("webTitle"),
+            "Url": result.get("webUrl"),
+            'source': 'Guardian',
          
         })
         
@@ -103,8 +113,6 @@ def scrape_data(last_date):
 
 
 
-n
-
 for _ in range(n):
 
     guardian_data = scrape_data(last_date)
@@ -116,17 +124,18 @@ for _ in range(n):
     
     Guardian_df = pd.concat([Guardian_df, update_Gardian_df], 
                               ignore_index=True)
-    Guardian_df.drop_duplicates(subset='title', keep='last', inplace=True)
+    Guardian_df.drop_duplicates(subset='Title', keep='last', inplace=True)
     
     
-    last_date = step_date_backwards(last_date)
+    last_date = Guardian_df['Date'].str[:10].iloc[-1]
+
 
     # update user
     print(f"Added {len(update_Gardian_df)} new articles for {last_date}")
 
 
 # Save to CSV:
-#-------------
+# -------------
 
 #test
 Guardian_df.to_csv(file_name, index=False)
