@@ -48,7 +48,8 @@ def fetch_daily_mail_data(date):
     articles = ul.find_all('li')
     return [{'title': article.find('a').get_text(),
              'url': 'https://www.dailymail.co.uk' + article.find('a')['href'],
-             'date': date} for article in articles if article.find('a')]
+             'date': date,
+             'source': 'Daily Mail'} for article in articles if article.find('a')]
 
 
 
