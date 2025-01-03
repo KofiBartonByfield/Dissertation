@@ -1,11 +1,12 @@
 import pandas as pd
+import os
+
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
 
 # List of file paths for the articles
-file_paths = [
-    'data/daily_mail_articles.csv',
-    'data/daily_express_articles.csv',
-    'data/independent_articles.csv'
-]
+file_paths = os.listdir('data/headlines')
+
 
 # Keywords related to knife crime
 keywords = ['knife', 'stabbing', 'murder', 'kill']
@@ -19,7 +20,10 @@ def is_knife_crime_related(text):
 knife_data = pd.DataFrame()
 
 # Loop through file paths and process each file
-for file_path in file_paths:
+for file in file_paths:
+    
+    file_path = f"data/headlines/{file}"
+    
     try:
         # Read the data
         data = pd.read_csv(file_path)
