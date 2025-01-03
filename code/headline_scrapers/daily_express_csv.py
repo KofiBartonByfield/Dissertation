@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Daily Mail Scraper
+Daily Express Scraper
 
-https://www.dailymail.co.uk/home/sitemaparchive/index.html
+https://www.express.co.uk/sitearchive
 
 """
 
@@ -17,7 +17,7 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
 
-file_name = "../data/daily_mail_articles.csv"
+file_name = "../../data/daily_express_articles.csv"
 
 
 
@@ -27,12 +27,12 @@ file_name = "../data/daily_mail_articles.csv"
 
 def step_date_backwards(date_str):
     """Move date back by one day."""
-    date_obj = datetime.strptime(date_str, '%Y%m%d')
-    return (date_obj - timedelta(days=1)).strftime('%Y%m%d')
+    date_obj = datetime.strptime(date_str, '%Y/%m/%d')
+    return (date_obj - timedelta(days=1)).strftime('%Y/%m/%d')
 
-def fetch_daily_mail_data(date):
+def fetch_daily_express_data(date):
     """Fetch articles for a specific date."""
-    url = f'https://www.dailymail.co.uk/home/sitemaparchive/day_{date}.html'
+    url = f'https://www.express.co.uk/sitearchive/{date}'
     response = requests.get(url)
     
     if response.status_code != 200:
@@ -40,16 +40,16 @@ def fetch_daily_mail_data(date):
         return []
     
     soup = BeautifulSoup(response.text, 'html.parser')
-    ul = soup.find('ul', {'class': 'archive-articles debate link-box'})
+    ul = soup.find('ul', {'class': 'section-list'})
     if not ul:
         print(f"No articles found for {date}.")
         return []
     
     articles = ul.find_all('li')
     return [{'title': article.find('a').get_text(),
-             'url': 'https://www.dailymail.co.uk' + article.find('a')['href'],
+             'url': 'https://www.express.co.uk/' + article.find('a')['href'],
              'date': date,
-             'source': 'Daily Mail'} for article in articles if article.find('a')]
+              'source': 'Daily Express'} for article in articles if article.find('a')]
 
 
 
@@ -72,11 +72,11 @@ except:
 
 # check if csv already exists
 if os.path.exists(file_name):
-    Daily_Mail_df = pd.read_csv(file_name)
-    last_date = str(Daily_Mail_df['date'].iloc[-1])
+    Daily_Express_df = pd.read_csv(file_name)
+    last_date = str(Daily_Express_df['date'].iloc[-1])
 else:
-    Daily_Mail_df = pd.DataFrame(columns=['title', 'url', 'date'])
-    last_date = datetime.today().strftime('%Y%m%d')
+    Daily_Express_df = pd.DataFrame(columns=['title', 'url', 'date'])
+    last_date = datetime.today().strftime('%Y/%m/%d')
     print(f"{file_name} will be created.")
 
 
@@ -90,22 +90,22 @@ date = step_date_backwards(last_date)
 
 # collect data
 for i in range(n):
-    daily_mail_data = fetch_daily_mail_data(date)
-    if not daily_mail_data:
+    daily_express_data = fetch_daily_express_data(date)
+    if not daily_express_data:
         print(f"No data for {date}.")
         date = step_date_backwards(date)
         continue
 
     # update DataFrame
-    update_Daily_Mail_df = pd.DataFrame(daily_mail_data)
-    Daily_Mail_df = pd.concat([Daily_Mail_df, update_Daily_Mail_df], 
+    update_Daily_Express_df = pd.DataFrame(daily_express_data)
+    Daily_Express_df = pd.concat([Daily_Express_df, update_Daily_Express_df], 
                               ignore_index=True)
-    Daily_Mail_df.drop_duplicates(subset='title', keep='last', inplace=True)
+    Daily_Express_df.drop_duplicates(subset='title', keep='last', inplace=True)
 
     # update user
-    print(f"Added {len(update_Daily_Mail_df)} new articles for {date}")
+    print(f"Added {len(update_Daily_Express_df)} new articles for {date}")
     date = step_date_backwards(date)
-    print(f"Completed: {len(Daily_Mail_df['date'].unique())} / 365")
+    print(f"Completed: {len(Daily_Express_df['date'].unique())} / 365")
 
 
 
@@ -113,7 +113,7 @@ for i in range(n):
 #-------------
 
 
-Daily_Mail_df.to_csv(file_name, index=False)
+Daily_Express_df.to_csv(file_name, index=False)
 
 print(f"Scraping complete. Updated {file_name}.")
 

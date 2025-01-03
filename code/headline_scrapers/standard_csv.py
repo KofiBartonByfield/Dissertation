@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Daily Express Scraper
+Standard Scraper
 
-https://www.express.co.uk/sitearchive
+https://www.standard.co.uk/archive/
 
 """
 
@@ -17,7 +17,7 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
 
-file_name = "../data/daily_express_articles.csv"
+file_name = "../../data/standard_articles.csv"
 
 
 
@@ -27,12 +27,12 @@ file_name = "../data/daily_express_articles.csv"
 
 def step_date_backwards(date_str):
     """Move date back by one day."""
-    date_obj = datetime.strptime(date_str, '%Y/%m/%d')
-    return (date_obj - timedelta(days=1)).strftime('%Y/%m/%d')
+    date_obj = datetime.strptime(date_str, '%Y-%m-%d')
+    return (date_obj - timedelta(days=1)).strftime('%Y-%m-%d')
 
-def fetch_daily_express_data(date):
+def fetch_standard_data(date):
     """Fetch articles for a specific date."""
-    url = f'https://www.express.co.uk/sitearchive/{date}'
+    url = f'https://www.standard.co.uk/archive/{date}'
     response = requests.get(url)
     
     if response.status_code != 200:
@@ -40,16 +40,20 @@ def fetch_daily_express_data(date):
         return []
     
     soup = BeautifulSoup(response.text, 'html.parser')
-    ul = soup.find('ul', {'class': 'section-list'})
+    ul = soup.find('ul')
     if not ul:
         print(f"No articles found for {date}.")
         return []
     
     articles = ul.find_all('li')
     return [{'title': article.find('a').get_text(),
-             'url': 'https://www.express.co.uk/' + article.find('a')['href'],
+             'url': 'https://www.standard.co.uk/' + article.find('a')['href'],
              'date': date,
-              'source': 'Daily Express'} for article in articles if article.find('a')]
+              'source': 'Standard'} for article in articles if article.find('a')]
+
+
+
+
 
 
 
@@ -72,11 +76,12 @@ except:
 
 # check if csv already exists
 if os.path.exists(file_name):
-    Daily_Express_df = pd.read_csv(file_name)
-    last_date = str(Daily_Express_df['date'].iloc[-1])
+    Standard_df = pd.read_csv(file_name)
+    last_date = str(Standard_df['date'].iloc[-1])
 else:
-    Daily_Express_df = pd.DataFrame(columns=['title', 'url', 'date'])
-    last_date = datetime.today().strftime('%Y/%m/%d')
+    Standard_df = pd.DataFrame(columns=['title', 'url', 'date'])
+    # last_date = datetime.today().strftime('%Y-%m-%d')
+    last_date = '2024-01-01'
     print(f"{file_name} will be created.")
 
 
@@ -90,22 +95,22 @@ date = step_date_backwards(last_date)
 
 # collect data
 for i in range(n):
-    daily_express_data = fetch_daily_express_data(date)
-    if not daily_express_data:
+    standard_data = fetch_standard_data(date)
+    if not standard_data:
         print(f"No data for {date}.")
         date = step_date_backwards(date)
         continue
 
     # update DataFrame
-    update_Daily_Express_df = pd.DataFrame(daily_express_data)
-    Daily_Express_df = pd.concat([Daily_Express_df, update_Daily_Express_df], 
+    update_Standard_df = pd.DataFrame(standard_data)
+    Standard_df = pd.concat([Standard_df, update_Standard_df], 
                               ignore_index=True)
-    Daily_Express_df.drop_duplicates(subset='title', keep='last', inplace=True)
+    Standard_df.drop_duplicates(subset='title', keep='last', inplace=True)
 
     # update user
-    print(f"Added {len(update_Daily_Express_df)} new articles for {date}")
+    print(f"Added {len(update_Standard_df)} new articles for {date}")
     date = step_date_backwards(date)
-    print(f"Completed: {len(Daily_Express_df['date'].unique())} / 365")
+    # print(f"Completed: {len(Standard_df['date'].unique())} / 365")
 
 
 
@@ -113,7 +118,7 @@ for i in range(n):
 #-------------
 
 
-Daily_Express_df.to_csv(file_name, index=False)
+Standard_df.to_csv(file_name, index=False)
 
 print(f"Scraping complete. Updated {file_name}.")
 

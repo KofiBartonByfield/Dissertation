@@ -16,7 +16,7 @@ import os
 
 
 API_KEY = os.getenv("GUARDIAN_API_KEY")
-file_name = "../data/guardian_articles.csv"
+file_name = "../../data/guardian_articles.csv"
 url = "https://content.guardianapis.com/search"
 articles = []
 
