@@ -18,6 +18,9 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 # File path for saving articles (modify as needed)
 file_name = "../../data/headlines/independent_articles.csv"
 
+end_date = datetime.strptime(str(pd.read_csv('details.csv').iloc[0].Details), '%d/%m/%y').strftime('%Y-%m-%d')
+
+
 # Functions:
 # -----------
 
@@ -74,12 +77,12 @@ def fetch_independent_data(date):
 # check if csv already exists
 if os.path.exists(file_name):
     Independent_df = pd.read_csv(file_name)
-    last_date = str(Independent_df['date'].iloc[-1])
+    date = step_date_backwards(str(Independent_df['date'].iloc[-1]))
 else:
     Independent_df = pd.DataFrame(columns=['title', 'url', 'date'])
     # last_date = datetime.today().strftime('%Y-%m-%d')
     # last_date = '2024-11-01'
-    last_date = datetime.strptime(str(pd.read_csv('details.csv').iloc[1].Details), '%d/%m/%y').strftime('%Y-%m-%d')
+    date = datetime.strptime(str(pd.read_csv('details.csv').iloc[1].Details), '%d/%m/%y').strftime('%Y-%m-%d')
 
     print(f"{file_name} will be created.")
 
@@ -110,7 +113,7 @@ except:
 
 
 # step date backwards
-date = step_date_backwards(last_date)
+# date = step_date_backwards(last_date)
 
 # collect data
 for i in range(n):
@@ -128,10 +131,14 @@ for i in range(n):
 
     # update user
     print(f"Added {len(update_Independent_df)} new articles for {date}")
-    date = step_date_backwards(date)
-    print(f"Completed: {len(Independent_df['date'].unique())} / 365")
+    # date = step_date_backwards(date)
+    # print(f"Completed: {len(Independent_df['date'].unique())} / 365")
 
-
+    if date == end_date:
+        print('End Date Reached')
+        break
+    else:
+        date = step_date_backwards(date)
 
 
 
