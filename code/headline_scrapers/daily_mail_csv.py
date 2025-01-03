@@ -17,7 +17,7 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
 
-file_name = "../../data/daily_mail_articles.csv"
+file_name = "../../data/headlines/daily_mail_articles.csv"
 
 
 
@@ -76,7 +76,9 @@ if os.path.exists(file_name):
     last_date = str(Daily_Mail_df['date'].iloc[-1])
 else:
     Daily_Mail_df = pd.DataFrame(columns=['title', 'url', 'date'])
-    last_date = datetime.today().strftime('%Y%m%d')
+    # last_date = datetime.today().strftime('%Y%m%d')
+    last_date = datetime.strptime(str(pd.read_csv('details.csv').iloc[1].Details), '%d/%m/%y').strftime('%Y/%m/%d')
+
     print(f"{file_name} will be created.")
 
 

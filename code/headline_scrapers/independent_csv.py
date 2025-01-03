@@ -16,7 +16,7 @@ import pandas as pd
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 # File path for saving articles (modify as needed)
-file_name = "../../data/independent_articles.csv"
+file_name = "../../data/headlines/independent_articles.csv"
 
 # Functions:
 # -----------
@@ -78,7 +78,9 @@ if os.path.exists(file_name):
 else:
     Independent_df = pd.DataFrame(columns=['title', 'url', 'date'])
     # last_date = datetime.today().strftime('%Y-%m-%d')
-    last_date = '2024-11-01'
+    # last_date = '2024-11-01'
+    last_date = datetime.strptime(str(pd.read_csv('details.csv').iloc[1].Details), '%d/%m/%y').strftime('%Y-%m-%d')
+
     print(f"{file_name} will be created.")
 
 

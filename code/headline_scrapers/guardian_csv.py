@@ -16,7 +16,7 @@ import os
 
 
 API_KEY = os.getenv("GUARDIAN_API_KEY")
-file_name = "../../data/guardian_articles.csv"
+file_name = "../../data/headlines/guardian_articles.csv"
 url = "https://content.guardianapis.com/search"
 articles = []
 
@@ -40,7 +40,8 @@ if os.path.exists(file_name):
 else:
     Guardian_df = pd.DataFrame()
     # last_date = str(datetime.date.today())
-    last_date = '2024-12-18'
+    last_date = datetime.strptime(str(pd.read_csv('details.csv').iloc[1].Details), '%d/%m/%y').strftime('%Y-%m-%d')
+
     print(f"{file_name} will be created.")
 
 

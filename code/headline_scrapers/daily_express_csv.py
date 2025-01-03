@@ -17,7 +17,7 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
 
-file_name = "../../data/daily_express_articles.csv"
+file_name = "../../data/headlines/daily_express_articles.csv"
 
 
 
@@ -75,8 +75,10 @@ if os.path.exists(file_name):
     Daily_Express_df = pd.read_csv(file_name)
     last_date = str(Daily_Express_df['date'].iloc[-1])
 else:
-    Daily_Express_df = pd.DataFrame(columns=['title', 'url', 'date'])
-    last_date = datetime.today().strftime('%Y/%m/%d')
+    Daily_Express_df = pd.DataFrame()
+    # last_date = datetime.today().strftime('%Y/%m/%d')
+    last_date = datetime.strptime(str(pd.read_csv('details.csv').iloc[1].Details), '%d/%m/%y').strftime('%Y/%m/%d')
+
     print(f"{file_name} will be created.")
 
 
@@ -105,7 +107,7 @@ for i in range(n):
     # update user
     print(f"Added {len(update_Daily_Express_df)} new articles for {date}")
     date = step_date_backwards(date)
-    print(f"Completed: {len(Daily_Express_df['date'].unique())} / 365")
+    # print(f"Completed: {len(Daily_Express_df['date'].unique())} / 365")
 
 
 
