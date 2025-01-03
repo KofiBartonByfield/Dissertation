@@ -18,7 +18,7 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
 file_name = "../../data/headlines/standard_articles.csv"
-
+end_date = datetime.strptime(str(pd.read_csv('details.csv').iloc[0].Details), '%d/%m/%y').strftime('%Y-%m-%d')
 
 
 
@@ -77,11 +77,11 @@ except:
 # check if csv already exists
 if os.path.exists(file_name):
     Standard_df = pd.read_csv(file_name)
-    last_date = str(Standard_df['date'].iloc[-1])
+    date = step_date_backwards(str(Standard_df['date'].iloc[-1]))
 else:
     Standard_df = pd.DataFrame()
     # last_date = datetime.today().strftime('%Y-%m-%d')
-    last_date = datetime.strptime(str(pd.read_csv('details.csv').iloc[1].Details), '%d/%m/%y').strftime('%Y-%m-%d')
+    date = datetime.strptime(str(pd.read_csv('details.csv').iloc[1].Details), '%d/%m/%y').strftime('%Y-%m-%d')
 
     print(f"{file_name} will be created.")
 
@@ -91,8 +91,7 @@ else:
 #-----------------
 
 
-# step date backwards
-date = step_date_backwards(last_date)
+
 
 # collect data
 for i in range(n):
@@ -110,9 +109,13 @@ for i in range(n):
 
     # update user
     print(f"Added {len(update_Standard_df)} new articles for {date}")
-    date = step_date_backwards(date)
-    # print(f"Completed: {len(Standard_df['date'].unique())} / 365")
-
+   
+    
+    if date == end_date:
+        print('End Date Reached')
+        break
+    else:
+        date = step_date_backwards(date)
 
 
 # Save to CSV:
