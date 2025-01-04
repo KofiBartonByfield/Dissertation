@@ -18,6 +18,7 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
 file_name = "../../data/headlines/daily_express_articles.csv"
+end_date = datetime.strptime(str(pd.read_csv('details.csv').iloc[0].Details), '%d/%m/%y').strftime('%Y-%m-%d')
 
 
 
@@ -29,6 +30,8 @@ def step_date_backwards(date_str):
     """Move date back by one day."""
     date_obj = datetime.strptime(date_str, '%Y/%m/%d')
     return (date_obj - timedelta(days=1)).strftime('%Y/%m/%d')
+
+
 
 def fetch_daily_express_data(date):
     """Fetch articles for a specific date."""
@@ -73,11 +76,11 @@ except:
 # check if csv already exists
 if os.path.exists(file_name):
     Daily_Express_df = pd.read_csv(file_name)
-    last_date = str(Daily_Express_df['date'].iloc[-1])
+    date = str(Daily_Express_df['date'].iloc[-1])
 else:
     Daily_Express_df = pd.DataFrame()
     # last_date = datetime.today().strftime('%Y/%m/%d')
-    last_date = datetime.strptime(str(pd.read_csv('details.csv').iloc[1].Details), '%d/%m/%y').strftime('%Y/%m/%d')
+    date = datetime.strptime(str(pd.read_csv('details.csv').iloc[1].Details), '%d/%m/%y').strftime('%Y/%m/%d')
 
     print(f"{file_name} will be created.")
 
@@ -87,8 +90,6 @@ else:
 #-----------------
 
 
-# step date backwards
-date = step_date_backwards(last_date)
 
 # collect data
 for i in range(n):
@@ -106,8 +107,13 @@ for i in range(n):
 
     # update user
     print(f"Added {len(update_Daily_Express_df)} new articles for {date}")
-    date = step_date_backwards(date)
-    # print(f"Completed: {len(Daily_Express_df['date'].unique())} / 365")
+
+    
+    if date == end_date:
+        print('End Date Reached')
+        break
+    else:
+        date = step_date_backwards(date)
 
 
 

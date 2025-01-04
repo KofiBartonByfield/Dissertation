@@ -18,6 +18,8 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
 file_name = "../../data/headlines/daily_mail_articles.csv"
+end_date = datetime.strptime(str(pd.read_csv('details.csv').iloc[0].Details), 
+                             '%d/%m/%y').strftime('%Y%m%d')
 
 
 
@@ -73,11 +75,11 @@ except:
 # check if csv already exists
 if os.path.exists(file_name):
     Daily_Mail_df = pd.read_csv(file_name)
-    last_date = str(Daily_Mail_df['date'].iloc[-1])
+    date = str(Daily_Mail_df['date'].iloc[-1])
 else:
     Daily_Mail_df = pd.DataFrame(columns=['title', 'url', 'date'])
-    # last_date = datetime.today().strftime('%Y%m%d')
-    last_date = datetime.strptime(str(pd.read_csv('details.csv').iloc[1].Details), '%d/%m/%y').strftime('%Y/%m/%d')
+    date = datetime.strptime(str(pd.read_csv('details.csv').iloc[1].Details), 
+                             '%d/%m/%y').strftime('%Y%m%d')
 
     print(f"{file_name} will be created.")
 
@@ -87,10 +89,6 @@ else:
 #-----------------
 
 
-# step date backwards
-date = step_date_backwards(last_date)
-
-# collect data
 for i in range(n):
     daily_mail_data = fetch_daily_mail_data(date)
     if not daily_mail_data:
@@ -106,8 +104,14 @@ for i in range(n):
 
     # update user
     print(f"Added {len(update_Daily_Mail_df)} new articles for {date}")
-    date = step_date_backwards(date)
-    print(f"Completed: {len(Daily_Mail_df['date'].unique())} / 365")
+    
+    if date == end_date:
+        print('End Date Reached')
+        break
+    else:
+        date = step_date_backwards(date)
+
+
 
 
 

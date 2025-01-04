@@ -80,8 +80,6 @@ if os.path.exists(file_name):
     date = step_date_backwards(str(Independent_df['date'].iloc[-1]))
 else:
     Independent_df = pd.DataFrame(columns=['title', 'url', 'date'])
-    # last_date = datetime.today().strftime('%Y-%m-%d')
-    # last_date = '2024-11-01'
     date = datetime.strptime(str(pd.read_csv('details.csv').iloc[1].Details), '%d/%m/%y').strftime('%Y-%m-%d')
 
     print(f"{file_name} will be created.")
@@ -111,9 +109,6 @@ except:
 # Processing Loop:
 #-----------------
 
-
-# step date backwards
-# date = step_date_backwards(last_date)
 
 # collect data
 for i in range(n):
