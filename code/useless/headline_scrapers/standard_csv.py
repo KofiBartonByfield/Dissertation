@@ -120,11 +120,11 @@ for i in range(n):
 
 # Save to CSV:
 #-------------
+print(Standard_df)
 
+# Standard_df.to_csv(file_name, index=False)
 
-Standard_df.to_csv(file_name, index=False)
-
-print(f"Scraping complete. Updated {file_name}.")
+# print(f"Scraping complete. Updated {file_name}.")
 
 
 
