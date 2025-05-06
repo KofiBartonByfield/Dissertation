@@ -1,8 +1,6 @@
 
 /.spyproject
 /data
-code/.ipynb_checkpoints/clean_gov_data-checkpoint.ipynb
 code/.Rhistory
 /myenv
-code/.ipynb_checkpoints/headline_cleaning-checkpoint.ipynb
-/code/stop_and_search/.ipynb_checkpoints
+code\useless
