@@ -1,6 +1,6 @@
 # Dissertation
 
 ## To Do:
-- finish off printing standard and independent csvs
-- update the rest to include start and end dates from details.csv
+- finish writing lit review
+- clean up latex tables of model comparrasons
 - 
