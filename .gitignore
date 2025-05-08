@@ -1,9 +1,7 @@
-
 /.spyproject
 /data
-code/.Rhistory
 /myenv
-code\useless
+code/useless
 .Rproj.user
-/Dissertation.Rproj
-.Rhistory
+*.Rproj
+**/*.Rhistory
