@@ -63,9 +63,6 @@ anova(london_poisson_model, london_negbin_model, test = "Chisq")
 
 
 
-
-library(knitr)
-
 # Extract values
 aic_poisson <- AIC(london_poisson_model)
 aic_negbin <- AIC(london_negbin_model)
@@ -76,23 +73,19 @@ loglik_negbin <- as.numeric(logLik(london_negbin_model))
 # Create a data frame
 comparison_table <- data.frame(
   Metric = c("AIC", "Log Likelihood"),
-  `Poisson Model` = c(round(aic_poisson, 2), round(loglik_poisson, 2)),
-  `Negative Binomial Model` = c(round(aic_negbin, 2), round(loglik_negbin, 2))
-)
-
-# Print LaTeX table
-tab <- kable(
-  comparison_table, 
-  format = "latex", 
-  booktabs = TRUE, 
-  caption = "Model Fit Comparison: Poisson vs Negative Binomial (London)",
-  label = "tab:model_comparison_london"
+  `Poisson Model` = c(round(aic_poisson, 0), round(loglik_poisson, 0)),
+  `Negative Binomial Model` = c(round(aic_negbin, 0), round(loglik_negbin, 0))
 )
 
 
+stargazer(comparison_table,
+          type = 'latex',
+          summary = FALSE,
+          rownames = FALSE,
+          title = "Model Fit Comparison: London",
+          dep.var.caption = "",
+          dep.var.labels.include = FALSE)
 
-# Save to file
-writeLines(tab, "Figures/Regression Tables/model_comparison_london.tex")
 
 
 # ------------------------------------------------------------------------------
@@ -271,20 +264,13 @@ comparison_table <- data.frame(
   `Negative Binomial Model` = c(round(aic_negbin, 2), round(loglik_negbin, 2))
 )
 
-# Print LaTeX table
-tab <- kable(
-  comparison_table, 
-  format = "latex", 
-  booktabs = TRUE, 
-  caption = "Model Fit Comparison: Poisson vs Negative Binomial (Merseyside)",
-  label = "tab:model_comparison_london"
-)
-
-
-# Save to file
-writeLines(tab, "Figures/Regression Tables/model_comparison_merseyside.tex")
-
-
+stargazer(comparison_table,
+          type = 'latex',
+          summary = FALSE,
+          rownames = FALSE,
+          title = "Model Fit Comparison: Merseyside",
+          dep.var.caption = "",
+          dep.var.labels.include = FALSE)
 # ------------------------------------------------------------------------------
 # Fixed Effects
 # ------------------------------------------------------------------------------
