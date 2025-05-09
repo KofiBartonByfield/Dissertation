@@ -127,45 +127,74 @@ summary(london_fe_negbin_model)
 # comparing the two models
 # ---------------------------
 
-
-
-logLik(london_negbin_model)
-logLik(london_fe_negbin_model)
-
-# Since the fixed effects model has a higher (less negative) log-likelihood, 
-# it means the fixed effects model fits the data better than the regular 
-# negative binomial model.
-
-
-AIC(london_negbin_model, london_fe_negbin_model)
-
-etable(london_negbin_model, london_fe_negbin_model)
-etable(london_negbin_model, london_fe_negbin_model, 
-       tex = TRUE, 
-       file = "Figures/Regression Tables/london_nb_vs_fenb_table.tex")
-
-
-
+# 
+# 
+# logLik(london_negbin_model)
+# logLik(london_fe_negbin_model)
+# 
+# # Since the fixed effects model has a higher (less negative) log-likelihood, 
+# # it means the fixed effects model fits the data better than the regular 
+# # negative binomial model.
+# 
+# 
+# AIC(london_negbin_model, london_fe_negbin_model)
+# 
+# etable(london_negbin_model, london_fe_negbin_model)
+# # etable(london_negbin_model, london_fe_negbin_model, 
+# #        tex = TRUE, 
+#        file = "Figures/Regression Tables/london_nb_vs_fenb_table.tex")
 
 
 
 
 
+# 
+# logLik(london_negbin_model)
+# logLik(london_fe_negbin_model)
+# 
+# AIC(london_negbin_model, london_fe_negbin_model)
+# BIC(london_negbin_model, london_fe_negbin_model)
+# 
+# 
+# 
+# 
+# # Get deviance and degrees of freedom
+# deviance(london_poisson_model) / london_poisson_model$df.residual
+# 
+
+# # 
+# library(stargazer)
+# 
+# # Extract model metrics
+aic_values <- c(AIC(london_negbin_model), AIC(london_fe_negbin_model))
+loglik_values <- c(logLik(london_negbin_model), logLik(london_fe_negbin_model))
+pseudo_r2_values <- c(london_negbin_model$pseudo_r2, london_fe_negbin_model$pseudo_r2)
+theta_values <- c(london_negbin_model$theta, london_fe_negbin_model$theta)
+
+# Create a matrix of values for the table
+comparison_matrix <- matrix(c(
+  round(aic_values, 2),
+  round(as.numeric(loglik_values), 2),
+  round(pseudo_r2_values, 3),
+  round(theta_values, 2)
+), ncol = 2, byrow = TRUE)
 
 
+# Convert matrix to data frame and set row names
+comparison_df <- as.data.frame(comparison_matrix)
+rownames(comparison_df) <- c("AIC", "Log Likelihood", "Pseudo R-squared", "Dispersion (Theta)")
 
+# Set column names directly
+colnames(comparison_df) <- c("No Fixed Effects", "With Fixed Effects")
 
-
-
-
-
-
-
-
-
-
-
-
+# Pass to stargazer
+stargazer(comparison_df, 
+          summary = FALSE,
+          rownames = TRUE,
+          type = "latex",
+          title = "Fixed Effects Model Fit Statistics: London",
+          dep.var.caption = "",
+          dep.var.labels.include = FALSE)
 
 
 
@@ -303,14 +332,42 @@ AIC(merseyside_negbin_model, merseyside_fe_negbin_model)
 etable(merseyside_negbin_model, merseyside_fe_negbin_model)
 
 
-etable(negbin_model, fe_negbin_model, 
-       tex = TRUE, 
-       file = "Figures/Regression Tables/merseyside_nb_vs_fenb_table.tex")
+# etable(negbin_model, fe_negbin_model, 
+#        tex = TRUE, 
+#        file = "Figures/Regression Tables/merseyside_nb_vs_fenb_table.tex")
 
 
 
 
+aic_values <- c(AIC(merseyside_negbin_model), AIC(merseyside_fe_negbin_model))
+loglik_values <- c(logLik(merseyside_negbin_model), logLik(merseyside_fe_negbin_model))
+pseudo_r2_values <- c(merseyside_negbin_model$pseudo_r2, merseyside_fe_negbin_model$pseudo_r2)
+theta_values <- c(merseyside_negbin_model$theta, merseyside_fe_negbin_model$theta)
 
+# Create a matrix of values for the table
+comparison_matrix <- matrix(c(
+  round(aic_values, 2),
+  round(as.numeric(loglik_values), 2),
+  round(pseudo_r2_values, 3),
+  round(theta_values, 2)
+), ncol = 2, byrow = TRUE)
+
+
+# Convert matrix to data frame and set row names
+comparison_df <- as.data.frame(comparison_matrix)
+rownames(comparison_df) <- c("AIC", "Log Likelihood", "Pseudo R-squared", "Dispersion (Theta)")
+
+# Set column names directly
+colnames(comparison_df) <- c("No Fixed Effects", "With Fixed Effects")
+
+# Pass to stargazer
+stargazer(comparison_df, 
+          summary = FALSE,
+          rownames = TRUE,
+          type = "latex",
+          title = "Fixed Effects Model Fit Statistics: Merseyside",
+          dep.var.caption = "",
+          dep.var.labels.include = FALSE)
 
 
 
