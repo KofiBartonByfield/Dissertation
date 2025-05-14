@@ -22,7 +22,8 @@ head(london)
 
 
 # poisson model
-london_poisson_model <- glm(StopCount ~ IncomeDomainScore_z + 
+london_poisson_model <- glm(StopCount ~ gini+
+                                IncomeDomainScore_z + 
                                  MeanHousePrice_z + 
                                  CrimeSum_z + 
                                  BAME_z + 
@@ -31,7 +32,7 @@ london_poisson_model <- glm(StopCount ~ IncomeDomainScore_z +
                      family = poisson)
 
 # negative binomial
-london_negbin_model <- glm.nb(StopCount ~ IncomeDomainScore_z + 
+london_negbin_model <- glm.nb(StopCount ~ gini + IncomeDomainScore_z + 
                                    MeanHousePrice_z + 
                                    CrimeSum_z + 
                                    BAME_z + 
@@ -96,7 +97,7 @@ stargazer(comparison_table,
 
 
 # negative binomial
-london_negbin_model <- fenegbin(StopCount ~ IncomeDomainScore_z + 
+london_negbin_model <- fenegbin(StopCount ~ gini + IncomeDomainScore_z + 
                            MeanHousePrice_z + 
                            CrimeSum_z + 
                            BAME_z + 
@@ -104,7 +105,7 @@ london_negbin_model <- fenegbin(StopCount ~ IncomeDomainScore_z +
                          data = london)
 
 # fe negative binomial
-london_fe_negbin_model <- fenegbin(StopCount ~ IncomeDomainScore_z + 
+london_fe_negbin_model <- fenegbin(StopCount ~ gini + IncomeDomainScore_z + 
                                          MeanHousePrice_z + 
                                          CrimeSum_z + 
                                          BAME_z + 
@@ -210,7 +211,7 @@ stargazer(comparison_df,
 
 
 # poisson model
-merseyside_poisson_model <- glm(StopCount ~ IncomeDomainScore_z + 
+merseyside_poisson_model <- glm(StopCount ~ gini + IncomeDomainScore_z + 
                               MeanHousePrice_z + 
                               CrimeSum_z + 
                               BAME_z + 
@@ -219,7 +220,7 @@ merseyside_poisson_model <- glm(StopCount ~ IncomeDomainScore_z +
                             family = poisson)
 
 # negative binomial
-merseyside_negbin_model <- glm.nb(StopCount ~ IncomeDomainScore_z + 
+merseyside_negbin_model <- glm.nb(StopCount ~ gini + IncomeDomainScore_z + 
                                 MeanHousePrice_z + 
                                 CrimeSum_z + 
                                 BAME_z + 
@@ -279,7 +280,7 @@ stargazer(comparison_table,
 
 
 # negative binomial
-merseyside_negbin_model <- fenegbin(StopCount ~ IncomeDomainScore_z + 
+merseyside_negbin_model <- fenegbin(StopCount ~ gini + IncomeDomainScore_z + 
                                   MeanHousePrice_z + 
                                   CrimeSum_z + 
                                   BAME_z + 
@@ -287,7 +288,7 @@ merseyside_negbin_model <- fenegbin(StopCount ~ IncomeDomainScore_z +
                                 data = merseyside)
 
 # fe negative binomial
-merseyside_fe_negbin_model <- fenegbin(StopCount ~ IncomeDomainScore_z + 
+merseyside_fe_negbin_model <- fenegbin(StopCount ~ gini + IncomeDomainScore_z + 
                                      MeanHousePrice_z + 
                                      CrimeSum_z + 
                                      BAME_z + 
