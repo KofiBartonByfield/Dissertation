@@ -21,6 +21,7 @@ merseyside <- dataset %>%
 london <- dataset %>% 
                     filter(PoliceDept == "London")%>% 
                     dplyr::select(StopCount,
+                                  gini,
                                   StopCountDrugs,
                                   PopulationLSOA,
                                   BAME, 
@@ -33,9 +34,10 @@ london <- dataset %>%
 
 # Create the first table for London with label
 stargazer(london, 
-          type = 'latex', 
+          type = 'text', 
           digits = 0, 
           covariate.labels = c("Total Stop Count", 
+                               "Gini",
                                "Drug Related Stop Count", 
                                "LSOA Population", 
                                "Percentage of BAME Individuals", 
@@ -80,14 +82,10 @@ stargazer(merseyside,
 
 
 
-
-
-
-# Save the stargazer output to the specified file
-stargazer(london, merseyside, 
-          type = 'latex', 
-          digits = 0, 
+star <- stargazer(london, 
+          type = 'text', 
           covariate.labels = c("Total Stop Count", 
+                               "Gini",
                                "Drug Related Stop Count", 
                                "LSOA Population", 
                                "Percentage of BAME Individuals", 
@@ -95,11 +93,27 @@ stargazer(london, merseyside,
                                "Total Crime Count", 
                                "Drug-Related Crime Count", 
                                "Mean House Price"),
-          out = "Figures/Regression Tables/Descriptive_Statistics.tex",
-          caption = "Descriptive Statistics for Stop and Search Data in London: A Breakdown of Key Variables",
-          caption = "Descriptive Statistics for Stop and Search Data in Merseyside: A Breakdown of Key Variables"
-          
-) 
+          out = "Figures/Regression Tables/Descriptive_Statistics_London.tex",
+          title = "Descriptive Statistics for Stop and Search Data in London",
+          label = "tab:descriptive_london"
+)
+
+star
+# 0.250       0.146       0.000        0.930  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

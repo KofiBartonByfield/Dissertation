@@ -32,11 +32,13 @@ london_poisson_model <- glm(StopCount ~ gini+
                      family = poisson)
 
 # negative binomial
-london_negbin_model <- glm.nb(StopCount ~ gini + IncomeDomainScore_z + 
-                                   MeanHousePrice_z + 
-                                   CrimeSum_z + 
-                                   BAME_z + 
-                                   DrugCrimeSum_z,
+london_negbin_model <- glm.nb(StopCount ~ 
+                              gini + 
+                              IncomeDomainScore_z + 
+                              MeanHousePrice_z + 
+                              CrimeSum_z + 
+                              BAME_z + 
+                              DrugCrimeSum_z,
                        data = london)
 
 
@@ -65,22 +67,22 @@ anova(london_poisson_model, london_negbin_model, test = "Chisq")
 
 
 # Extract values
-aic_poisson <- AIC(london_poisson_model)
-aic_negbin <- AIC(london_negbin_model)
+l_aic_poisson <- AIC(london_poisson_model)
+l_aic_negbin <- AIC(london_negbin_model)
 
-loglik_poisson <- as.numeric(logLik(london_poisson_model))
-loglik_negbin <- as.numeric(logLik(london_negbin_model))
+l_loglik_poisson <- as.numeric(logLik(london_poisson_model))
+l_loglik_negbin <- as.numeric(logLik(london_negbin_model))
 
 # Create a data frame
-comparison_table <- data.frame(
+l_comparison_table <- data.frame(
   Metric = c("AIC", "Log Likelihood"),
-  `Poisson Model` = c(round(aic_poisson, 0), round(loglik_poisson, 0)),
-  `Negative Binomial Model` = c(round(aic_negbin, 0), round(loglik_negbin, 0))
+  `Poisson Model` = c(round(l_aic_poisson, 0), round(l_loglik_poisson, 0)),
+  `Negative Binomial Model` = c(round(l_aic_negbin, 0), round(l_loglik_negbin, 0))
 )
 
 
-stargazer(comparison_table,
-          type = 'latex',
+stargazer(l_comparison_table,
+          type = 'text',
           summary = FALSE,
           rownames = FALSE,
           title = "Model Fit Comparison: London",
@@ -92,8 +94,6 @@ stargazer(comparison_table,
 # ------------------------------------------------------------------------------
 # Fixed Effects
 # ------------------------------------------------------------------------------
-
-
 
 
 # negative binomial
@@ -185,7 +185,7 @@ colnames(comparison_df) <- c("No Fixed Effects", "With Fixed Effects")
 stargazer(comparison_df, 
           summary = FALSE,
           rownames = TRUE,
-          type = "latex",
+          type = "text",
           title = "Fixed Effects Model Fit Statistics: London",
           dep.var.caption = "",
           dep.var.labels.include = FALSE)
@@ -211,20 +211,24 @@ stargazer(comparison_df,
 
 
 # poisson model
-merseyside_poisson_model <- glm(StopCount ~ gini + IncomeDomainScore_z + 
-                              MeanHousePrice_z + 
-                              CrimeSum_z + 
-                              BAME_z + 
-                              DrugCrimeSum_z,
-                            data = merseyside, 
-                            family = poisson)
-
-# negative binomial
-merseyside_negbin_model <- glm.nb(StopCount ~ gini + IncomeDomainScore_z + 
+merseyside_poisson_model <- glm(StopCount ~ 
+                                gini + 
+                                IncomeDomainScore_z + 
                                 MeanHousePrice_z + 
                                 CrimeSum_z + 
                                 BAME_z + 
                                 DrugCrimeSum_z,
+                            data = merseyside, 
+                            family = poisson)
+
+# negative binomial
+merseyside_negbin_model <- glm.nb(StopCount ~ 
+                                  gini + 
+                                  IncomeDomainScore_z + 
+                                  MeanHousePrice_z + 
+                                  CrimeSum_z + 
+                                  BAME_z + 
+                                  DrugCrimeSum_z,
                               data = merseyside)
 
 
@@ -252,26 +256,43 @@ anova(merseyside_poisson_model, merseyside_negbin_model, test = "Chisq")
 
 
 # Extract values
-aic_poisson <- AIC(merseyside_poisson_model)
-aic_negbin <- AIC(merseyside_negbin_model)
+m_aic_poisson <- AIC(merseyside_poisson_model)
+m_aic_negbin <- AIC(merseyside_negbin_model)
 
-loglik_poisson <- as.numeric(logLik(merseyside_poisson_model))
-loglik_negbin <- as.numeric(logLik(merseyside_negbin_model))
+m_loglik_poisson <- as.numeric(logLik(merseyside_poisson_model))
+m_loglik_negbin <- as.numeric(logLik(merseyside_negbin_model))
 
 # Create a data frame
-comparison_table <- data.frame(
+m_comparison_table <- data.frame(
   Metric = c("AIC", "Log Likelihood"),
-  `Poisson Model` = c(round(aic_poisson, 2), round(loglik_poisson, 2)),
-  `Negative Binomial Model` = c(round(aic_negbin, 2), round(loglik_negbin, 2))
+  `Poisson Model` = c(round(m_aic_poisson, 2), round(m_loglik_poisson, 2)),
+  `Negative Binomial Model` = c(round(m_aic_negbin, 2), round(m_loglik_negbin, 2))
 )
 
-stargazer(comparison_table,
-          type = 'latex',
+stargazer(m_comparison_table,
+          type = 'text',
           summary = FALSE,
           rownames = FALSE,
           title = "Model Fit Comparison: Merseyside",
           dep.var.caption = "",
           dep.var.labels.include = FALSE)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # ------------------------------------------------------------------------------
 # Fixed Effects
 # ------------------------------------------------------------------------------
@@ -351,7 +372,7 @@ colnames(comparison_df) <- c("No Fixed Effects", "With Fixed Effects")
 stargazer(comparison_df, 
           summary = FALSE,
           rownames = TRUE,
-          type = "latex",
+          type = "text",
           title = "Fixed Effects Model Fit Statistics: Merseyside",
           dep.var.caption = "",
           dep.var.labels.include = FALSE)
