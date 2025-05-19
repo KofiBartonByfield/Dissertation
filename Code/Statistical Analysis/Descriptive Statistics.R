@@ -10,6 +10,7 @@ merseyside <- dataset %>%
                         filter(PoliceDept == "Merseyside")%>% 
                         dplyr::select(StopCount,
                                       StopCountDrugs,
+                                      gini,
                                       PopulationLSOA,
                                       EthnicMinority, 
                                       IncomeDomainScore,
@@ -21,8 +22,8 @@ merseyside <- dataset %>%
 london <- dataset %>% 
                     filter(PoliceDept == "London")%>% 
                     dplyr::select(StopCount,
-                                  gini,
                                   StopCountDrugs,
+                                  gini,
                                   PopulationLSOA,
                                   EthnicMinority, 
                                   IncomeDomainScore,
@@ -37,8 +38,8 @@ stargazer(london,
           type = 'text', 
           digits = 0, 
           covariate.labels = c("Total Stop Count", 
-                               "Gini",
                                "Drug Related Stop Count", 
+                               "Gini",
                                "LSOA Population", 
                                "Ethnic Minority Percentage", 
                                "Income Domain Score", 
@@ -52,10 +53,11 @@ stargazer(london,
 
 # Create the second table for Merseyside with label
 stargazer(merseyside, 
-          type = 'latex', 
+          type = 'text', 
           digits = 0, 
           covariate.labels = c("Total Stop Count", 
                                "Drug Related Stop Count", 
+                               "Gini",
                                "LSOA Population", 
                                "Ethnic Minority Percentage", 
                                "Income Domain Score", 
@@ -75,46 +77,8 @@ stargazer(merseyside,
 
 
 
+stargazer(london, 
+          type = 'text')
 
-
-
-
-
-
-
-star <- stargazer(london, 
-          type = 'text', 
-          covariate.labels = c("Total Stop Count", 
-                               "Gini",
-                               "Drug Related Stop Count", 
-                               "LSOA Population", 
-                               "Percentage of EthnicMinority Individuals", 
-                               "Income Domain Score", 
-                               "Total Crime Count", 
-                               "Drug-Related Crime Count", 
-                               "Mean House Price"),
-          out = "Figures/Regression Tables/Descriptive_Statistics_London.tex",
-          title = "Descriptive Statistics for Stop and Search Data in London",
-          label = "tab:descriptive_london"
-)
-
-star
-# 0.250       0.146       0.000        0.930  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+stargazer(merseyside, 
+          type = 'text')
