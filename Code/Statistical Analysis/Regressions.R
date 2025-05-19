@@ -23,6 +23,7 @@ head(london)
 
 
 london_regression_1.1 <- fenegbin(StopCount ~ 
+                                gini + 
                                 IncomeDomainScore_z + 
                                 MeanHousePrice_z + 
                                 CrimeSum_z + 

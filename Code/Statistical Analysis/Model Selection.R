@@ -26,7 +26,7 @@ london_poisson_model <- glm(StopCount ~ gini+
                                 IncomeDomainScore_z + 
                                  MeanHousePrice_z + 
                                  CrimeSum_z + 
-                                 BAME_z + 
+                                 EthnicMinority_z + 
                                  DrugCrimeSum_z,
                      data = london, 
                      family = poisson)
@@ -37,7 +37,7 @@ london_negbin_model <- glm.nb(StopCount ~
                               IncomeDomainScore_z + 
                               MeanHousePrice_z + 
                               CrimeSum_z + 
-                              BAME_z + 
+                              EthnicMinority_z + 
                               DrugCrimeSum_z,
                        data = london)
 
@@ -100,7 +100,7 @@ stargazer(l_comparison_table,
 london_negbin_model <- fenegbin(StopCount ~ gini + IncomeDomainScore_z + 
                            MeanHousePrice_z + 
                            CrimeSum_z + 
-                           BAME_z + 
+                           EthnicMinority_z + 
                            DrugCrimeSum_z,
                          data = london)
 
@@ -108,7 +108,7 @@ london_negbin_model <- fenegbin(StopCount ~ gini + IncomeDomainScore_z +
 london_fe_negbin_model <- fenegbin(StopCount ~ gini + IncomeDomainScore_z + 
                                          MeanHousePrice_z + 
                                          CrimeSum_z + 
-                                         BAME_z + 
+                                         EthnicMinority_z + 
                                          DrugCrimeSum_z | Borough,
                             data = london)
 
@@ -216,7 +216,7 @@ merseyside_poisson_model <- glm(StopCount ~
                                 IncomeDomainScore_z + 
                                 MeanHousePrice_z + 
                                 CrimeSum_z + 
-                                BAME_z + 
+                                EthnicMinority_z + 
                                 DrugCrimeSum_z,
                             data = merseyside, 
                             family = poisson)
@@ -227,7 +227,7 @@ merseyside_negbin_model <- glm.nb(StopCount ~
                                   IncomeDomainScore_z + 
                                   MeanHousePrice_z + 
                                   CrimeSum_z + 
-                                  BAME_z + 
+                                  EthnicMinority_z + 
                                   DrugCrimeSum_z,
                               data = merseyside)
 
@@ -304,7 +304,7 @@ stargazer(m_comparison_table,
 merseyside_negbin_model <- fenegbin(StopCount ~ gini + IncomeDomainScore_z + 
                                   MeanHousePrice_z + 
                                   CrimeSum_z + 
-                                  BAME_z + 
+                                  EthnicMinority_z + 
                                   DrugCrimeSum_z,
                                 data = merseyside)
 
@@ -312,7 +312,7 @@ merseyside_negbin_model <- fenegbin(StopCount ~ gini + IncomeDomainScore_z +
 merseyside_fe_negbin_model <- fenegbin(StopCount ~ gini + IncomeDomainScore_z + 
                                      MeanHousePrice_z + 
                                      CrimeSum_z + 
-                                     BAME_z + 
+                                     EthnicMinority_z + 
                                      DrugCrimeSum_z | Borough,
                                    data = merseyside)
 
@@ -337,7 +337,7 @@ logLik(merseyside_fe_negbin_model)
 
 AIC(merseyside_negbin_model, merseyside_fe_negbin_model)
 
-etable(merseyside_negbin_model, merseyside_fe_negbin_model)
+# etable(merseyside_negbin_model, merseyside_fe_negbin_model)
 
 
 # etable(negbin_model, fe_negbin_model, 
