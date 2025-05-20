@@ -1,7 +1,9 @@
 /.spyproject
-/data
 /myenv
-code/useless
+Code/useless
 .Rproj.user
 *.Rproj
 **/*.Rhistory
+/Data/*
+!/Data/Data Sets/
+!/Data/Data Sets/**
