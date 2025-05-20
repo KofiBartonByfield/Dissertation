@@ -4,7 +4,7 @@ This repository contains the full research workflow, data, and LaTeX manuscript 
 
 ## Overview
 
-The dissertation explores how structural inequalities—measured through income deprivation and housing inequality—interact with ethnic demographics to influence stop and search patterns. Using spatially disaggregated data at the Lower Layer Super Output Area (LSOA) level, the analysis employs count-based regression models to assess these relationships.
+The dissertation explores how structural inequalities measured through income deprivation and housing inequality, interact with ethnic demographics to influence stop and search patterns. Using spatially disaggregated data at the Lower Layer Super Output Area (LSOA) level, the analysis employs count-based regression models to assess these relationships.
 
 ## Repository Structure
 
