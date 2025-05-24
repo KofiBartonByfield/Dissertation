@@ -202,6 +202,9 @@ merseyside_regression_1.2
 
 library(broom)
 library(dplyr)
+library(ggplot2)
+library(scales)  
+
 
 df_london <- tidy(london_regression_1.2, conf.int = TRUE) %>% mutate(region = "London")
 df_merseyside <- tidy(merseyside_regression_1.2, conf.int = TRUE) %>% mutate(region = "Merseyside")
@@ -216,38 +219,26 @@ custom_names <- c(
   IncomeDomainScore_z = "Income Score (z)",
   MeanHousePrice_z = "Mean House Price (z)",
   CrimeSum_z = "Crime Sum (z)",
-  EthnicMinority_z = "Ethnic Minority %",
-  DrugCrimeSum_z = "Drug Crime Sum (z)"
-  # add all variables you want to rename here
-)
-
-# Replace terms with custom names, keeping order
-df_sig$term <- factor(df_sig$term, levels = names(custom_names), labels = custom_names)
+  EthnicMinority_z = "Ethnic Minority (z)",
+  DrugCrimeSum_z = "Drug Crime Sum (z)",
+  .theta = "Over Disperson")
 
 
-library(ggplot2)
-library(scales) 
 
 ggplot(df_sig, aes(x = estimate, y = term, colour = region)) +
-  
   geom_point(position = position_dodge(width = 0.6), size = 4, alpha = 0.85) +
-  
   geom_errorbarh(aes(xmin = conf.low, xmax = conf.high),
                  position = position_dodge(width = 0.6), height = 0.25, linewidth = 0.8) +
-  
   geom_vline(xintercept = 0, linetype = "dashed", colour = "grey60") +
-  
   scale_colour_manual(values = c("London" = "#2C7BB6", "Merseyside" = "#D7191C")) +
-  
+  scale_y_discrete(labels = custom_names) +   # custom labels here
   labs(
     x = "Coefficient Estimate",
     y = NULL,
     colour = "Region",
     title = "Statistically Significant Coefficients: London vs Merseyside"
   ) +
-  
   theme_minimal(base_size = 14) +
-  
   theme(
     axis.text.y = element_text(face = "bold"),
     axis.title.x = element_text(face = "bold"),
@@ -257,3 +248,55 @@ ggplot(df_sig, aes(x = estimate, y = term, colour = region)) +
     legend.text = element_text(size = 12)
   )
 
+
+
+
+
+
+
+
+
+df_all <- bind_rows(df_london, df_merseyside) %>%
+  filter(term != ".theta") %>%
+  mutate(
+    estimate_adj = ifelse(term == "gini", estimate * 0.1, estimate),
+    conf.low_adj = ifelse(term == "gini", conf.low * 0.1, conf.low),
+    conf.high_adj = ifelse(term == "gini", conf.high * 0.1, conf.high),
+    
+    percent_change = (exp(estimate_adj) - 1) * 100,
+    conf.low.pc = (exp(conf.low_adj) - 1) * 100,
+    conf.high.pc = (exp(conf.high_adj) - 1) * 100
+  )
+
+
+
+df_sig <- df_all %>% filter(p.value < 0.05)
+
+
+sig_coef_plot <- ggplot(df_sig, aes(x = percent_change, y = term, colour = region, shape = region)) +
+  geom_point(position = position_dodge(width = 0.6), size = 4, alpha = 0.85) +
+  geom_errorbarh(aes(xmin = conf.low.pc, xmax = conf.high.pc),
+                 position = position_dodge(width = 0.6), height = 0.25, linewidth = 0.8) +
+  geom_vline(xintercept = 0, linetype = "dashed", colour = "grey60") +
+  scale_colour_manual(values = c("London" = "#2C7BB6", "Merseyside" = "#D7191C")) +
+  scale_shape_manual(values = c("London" = 16, "Merseyside" = 17)) +  # 16 = solid circle, 17 = solid triangle
+  scale_y_discrete(labels = custom_names) +
+  labs(
+    x = "Percentage Change in Expected Count",
+    y = NULL,
+    colour = "Region",
+    shape = "Region",
+    title = "Statistically Significant Percentage Changes"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    axis.text.y = element_text(face = "bold"),
+    axis.title.x = element_text(face = "bold"),
+    plot.title = element_text(face = "bold", size = 16, hjust = 0.5, margin = margin(b = 15)),
+    legend.position = "right",
+    legend.title = element_text(face = "bold"),
+    legend.text = element_text(size = 12)
+  )
+
+
+ggsave("Figures/Graphs/Coefficient_Graph.png", plot = sig_coef_plot, width = 10, height = 6, dpi = 300)
