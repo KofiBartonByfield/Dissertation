@@ -193,14 +193,67 @@ etable(
 
 
 
+london_regression_1.2
+merseyside_regression_1.2
 
 
 
 
 
+library(broom)
+library(dplyr)
+
+df_london <- tidy(london_regression_1.2, conf.int = TRUE) %>% mutate(region = "London")
+df_merseyside <- tidy(merseyside_regression_1.2, conf.int = TRUE) %>% mutate(region = "Merseyside")
+
+df_all <- bind_rows(df_london, df_merseyside)
+
+df_sig <- df_all %>% filter(p.value < 0.05)
+
+# Define custom names for your terms
+custom_names <- c(
+  gini = "Gini Coefficient",
+  IncomeDomainScore_z = "Income Score (z)",
+  MeanHousePrice_z = "Mean House Price (z)",
+  CrimeSum_z = "Crime Sum (z)",
+  EthnicMinority_z = "Ethnic Minority %",
+  DrugCrimeSum_z = "Drug Crime Sum (z)"
+  # add all variables you want to rename here
+)
+
+# Replace terms with custom names, keeping order
+df_sig$term <- factor(df_sig$term, levels = names(custom_names), labels = custom_names)
 
 
+library(ggplot2)
+library(scales) 
 
-
-
+ggplot(df_sig, aes(x = estimate, y = term, colour = region)) +
+  
+  geom_point(position = position_dodge(width = 0.6), size = 4, alpha = 0.85) +
+  
+  geom_errorbarh(aes(xmin = conf.low, xmax = conf.high),
+                 position = position_dodge(width = 0.6), height = 0.25, linewidth = 0.8) +
+  
+  geom_vline(xintercept = 0, linetype = "dashed", colour = "grey60") +
+  
+  scale_colour_manual(values = c("London" = "#2C7BB6", "Merseyside" = "#D7191C")) +
+  
+  labs(
+    x = "Coefficient Estimate",
+    y = NULL,
+    colour = "Region",
+    title = "Statistically Significant Coefficients: London vs Merseyside"
+  ) +
+  
+  theme_minimal(base_size = 14) +
+  
+  theme(
+    axis.text.y = element_text(face = "bold"),
+    axis.title.x = element_text(face = "bold"),
+    plot.title = element_text(face = "bold", size = 16, hjust = 0.5, margin = margin(b = 15)),
+    legend.position = "right",
+    legend.title = element_text(face = "bold"),
+    legend.text = element_text(size = 12)
+  )
 
