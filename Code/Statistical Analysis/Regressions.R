@@ -1,8 +1,12 @@
+rm(list = ls()) 
+
+
 library(dplyr)
 library(fixest)
 library(MASS)
 library(car)
 library(stargazer)
+
 
 
 dataset <- read.csv('Data/Data Sets/cleaned_dataset.csv')
@@ -211,7 +215,7 @@ df_merseyside <- tidy(merseyside_regression_1.2, conf.int = TRUE) %>% mutate(reg
 
 df_all <- bind_rows(df_london, df_merseyside)
 
-df_sig <- df_all %>% filter(p.value < 0.05)
+df_all <- df_all %>% filter(p.value < 0.05)
 
 # Define custom names for your terms
 custom_names <- c(
@@ -225,7 +229,7 @@ custom_names <- c(
 
 
 
-ggplot(df_sig, aes(x = estimate, y = term, colour = region)) +
+ggplot(df_all, aes(x = estimate, y = term, colour = region)) +
   geom_point(position = position_dodge(width = 0.6), size = 4, alpha = 0.85) +
   geom_errorbarh(aes(xmin = conf.low, xmax = conf.high),
                  position = position_dodge(width = 0.6), height = 0.25, linewidth = 0.8) +
@@ -270,10 +274,9 @@ df_all <- bind_rows(df_london, df_merseyside) %>%
 
 
 
-df_sig <- df_all %>% filter(p.value < 0.05)
 
 
-sig_coef_plot <- ggplot(df_sig, aes(x = percent_change, y = term, colour = region, shape = region)) +
+coef_plot <- ggplot(df_all, aes(x = percent_change, y = term, colour = region, shape = region)) +
   geom_point(position = position_dodge(width = 0.6), size = 4, alpha = 0.85) +
   geom_errorbarh(aes(xmin = conf.low.pc, xmax = conf.high.pc),
                  position = position_dodge(width = 0.6), height = 0.25, linewidth = 0.8) +
@@ -299,4 +302,9 @@ sig_coef_plot <- ggplot(df_sig, aes(x = percent_change, y = term, colour = regio
   )
 
 
-ggsave("Figures/Graphs/Coefficient_Graph.png", plot = sig_coef_plot, width = 10, height = 6, dpi = 300)
+coef_plot
+
+
+
+
+ggsave("Figures/Graphs/Coefficient_Graph.png", plot = coef_plot, width = 10, height = 6, dpi = 300)
