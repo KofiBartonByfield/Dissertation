@@ -240,7 +240,7 @@ ggplot(df_all, aes(x = estimate, y = term, colour = region)) +
     x = "Coefficient Estimate",
     y = NULL,
     colour = "Region",
-    title = "Statistically Significant Coefficients: London vs Merseyside"
+    title = "Coefficients: London vs Merseyside"
   ) +
   theme_minimal(base_size = 14) +
   theme(
@@ -289,7 +289,7 @@ coef_plot <- ggplot(df_all, aes(x = percent_change, y = term, colour = region, s
     y = NULL,
     colour = "Region",
     shape = "Region",
-    title = "Statistically Significant Percentage Changes"
+    title = "Regression Coefficients: London vs Merseyside"
   ) +
   theme_minimal(base_size = 14) +
   theme(
