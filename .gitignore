@@ -7,3 +7,4 @@ Code/useless
 /Data/*
 !/Data/Data Sets/
 !/Data/Data Sets/**
+.RData
