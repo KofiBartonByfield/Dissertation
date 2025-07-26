@@ -438,24 +438,69 @@ interact_plot(merseyside_regression_1.4, pred = IncomeDomainScore_z, modx = Ethn
 
 
 
-merseyside_regression_1.1 <- fenegbin(StopCount ~ 
+
+
+
+
+
+
+################################################################################
+rm(list = ls()) 
+
+
+library(dplyr)
+library(fixest)
+library(MASS)
+library(car)
+library(stargazer)
+
+
+
+
+dataset <- read.csv('Data/Data Sets/cleaned_dataset.csv')
+
+merseyside <- dataset %>% filter(PoliceDept == "Merseyside")
+london <- dataset %>% filter(PoliceDept == "London")
+
+
+# For Merseyside
+merseyside <- merseyside %>%
+  mutate(CrimeDomainDecile = factor(CrimeDomainDecile, levels = sort(unique(CrimeDomainDecile)))) %>%
+  mutate(CrimeDomainDecile = relevel(CrimeDomainDecile, ref = "5"))
+
+# For London
+london <- london %>%
+  mutate(CrimeDomainDecile = factor(CrimeDomainDecile, levels = sort(unique(CrimeDomainDecile)))) %>%
+  mutate(CrimeDomainDecile = relevel(CrimeDomainDecile, ref = "5"))
+
+
+
+
+
+merseyside_regression_1 <- fenegbin(StopCount ~ 
                                         gini + 
                                         IncomeDomainScore_z + 
                                         MeanHousePrice_z +
                                         DrugCrimeSum_z +
                                         EthnicMinority_z+
-                                        as.factor(CrimeDomainDecile),
+                                        CrimeDomainDecile| Borough,
+                                      cluster = "Borough",
                                       data = merseyside)
 
-merseyside_regression_1.2 <- fenegbin(StopCount ~ 
+
+merseyside_regression_1.1 <- fenegbin(StopCount ~ 
                                         gini + 
                                         IncomeDomainScore_z + 
-                                        MeanHousePrice_z + 
+                                        MeanHousePrice_z +
                                         DrugCrimeSum_z +
-                                        EthnicMinority_z +
-                                      as.factor(CrimeDomainDecile) 
-                                        | Borough,
-                                      cluster = "Borough",                                
+                                        EthnicMinority_z| Borough,
+                                      cluster = "Borough",
+                                      data = merseyside)
+
+
+
+merseyside_regression_1.2 <- fenegbin(StopCount ~ CrimeDomainDecile| Borough,
+                                      cluster = "Borough",
                                       data = merseyside)
 
 
@@ -464,8 +509,7 @@ merseyside_regression_1.3 <- fenegbin(StopCount ~
                                         IncomeDomainScore_z + 
                                         MeanHousePrice_z + 
                                         DrugCrimeSum_z +
-                                        EthnicMinority_z +
-                                        as.factor(CrimeDomainDecile) +  # <-- here
+                                        EthnicMinority_z +CrimeDomainDecile+
                                         gini*EthnicMinority_z| Borough,
                                       cluster = "Borough",
                                       data = merseyside)
@@ -476,41 +520,197 @@ merseyside_regression_1.4 <- fenegbin(StopCount ~
                                         IncomeDomainScore_z + 
                                         MeanHousePrice_z + 
                                         DrugCrimeSum_z +
-                                        EthnicMinority_z +
-                                        as.factor(CrimeDomainDecile) +
+                                        EthnicMinority_z +CrimeDomainDecile+
                                         IncomeDomainScore_z*EthnicMinority_z| Borough,
                                       cluster = "Borough",
                                       data = merseyside)
 
 
 
+vars <- c(
+  gini = "Gini Coefficient",
+  IncomeDomainScore_z = "Income Deprivation (z)",
+  MeanHousePrice_z = "Mean House Price (z)",
+  DrugCrimeSum_z = "Drug Crime Rate (z)",
+  EthnicMinority_z = "Ethnic Minority (z)",
+  `gini x EthnicMinority_z` = "Gini Coefficient x Ethnic Minority (z)",
+  `IncomeDomainScore_z x EthnicMinority_z` = "Income Deprivation (z) x Ethnic Minority (z)",
+  `CrimeDomainDecile1` = 'Crime Domain Decile = 1',
+  `CrimeDomainDecile2` = 'Crime Domain Decile = 2',
+  `CrimeDomainDecile3` = 'Crime Domain Decile = 3',
+  `CrimeDomainDecile4` = 'Crime Domain Decile = 4',
+  `CrimeDomainDecile5` = 'Crime Domain Decile = 5',
+  `CrimeDomainDecile6` = 'Crime Domain Decile = 6',
+  `CrimeDomainDecile7` = 'Crime Domain Decile = 7',
+  `CrimeDomainDecile8` = 'Crime Domain Decile = 8',
+  `CrimeDomainDecile9` = 'Crime Domain Decile = 9',
+  `CrimeDomainDecile10` = 'Crime Domain Decile = 10')
 
 
 
-etable(merseyside_regression_1.1, 
-       merseyside_regression_1.2,
-       merseyside_regression_1.3, 
-       merseyside_regression_1.4)
+
+
+etable(merseyside_regression_1,
+  merseyside_regression_1.1,
+  merseyside_regression_1.2,
+  merseyside_regression_1.3,
+  merseyside_regression_1.4,
+  # order =  order,
+  tex = F,
+  style.tex = style.tex("base"),
+  digits = 3,
+  dict = vars,
+  signif.code = c("***" = 0.001, "**" = 0.01, "*" = 0.05, "." = 0.1, " " = 1)
+)
+
+# ------------------------------------------------------------------------------
 
 
 
-etable("Baseline" = merseyside_regression_1.1,
-       "FE + Clustered SE" = merseyside_regression_1.2,
-       "Interaction 1" = merseyside_regression_1.3,
-       "Interaction 2" = merseyside_regression_1.4)
+london_regression_1 <- fenegbin(StopCount ~ 
+                                      gini + 
+                                      IncomeDomainScore_z + 
+                                      MeanHousePrice_z +
+                                      DrugCrimeSum_z +
+                                      EthnicMinority_z+
+                                      CrimeDomainDecile| Borough,
+                                    cluster = "Borough",
+                                    data = london)
 
 
-
-
-merseyside_regression_1.4 <- fenegbin(StopCount ~ NonDrugCrimeSum_z | Borough,
+london_regression_1.1 <- fenegbin(StopCount ~ 
+                                        gini + 
+                                        IncomeDomainScore_z + 
+                                        MeanHousePrice_z +
+                                        DrugCrimeSum_z +
+                                        EthnicMinority_z| Borough,
                                       cluster = "Borough",
-                                      data = merseyside)
-
-
-summary(merseyside_regression_1.4)
+                                      data = london)
 
 
 
+london_regression_1.2 <- fenegbin(StopCount ~ CrimeDomainDecile| Borough,
+                                      cluster = "Borough",
+                                      data = london)
 
+
+london_regression_1.3 <- fenegbin(StopCount ~ 
+                                        gini + 
+                                        IncomeDomainScore_z + 
+                                        MeanHousePrice_z + 
+                                        DrugCrimeSum_z +
+                                        EthnicMinority_z +CrimeDomainDecile+
+                                        gini*EthnicMinority_z| Borough,
+                                      cluster = "Borough",
+                                      data = london)
+
+
+london_regression_1.4 <- fenegbin(StopCount ~ 
+                                        gini + 
+                                        IncomeDomainScore_z + 
+                                        MeanHousePrice_z + 
+                                        DrugCrimeSum_z +
+                                        EthnicMinority_z +CrimeDomainDecile+
+                                        IncomeDomainScore_z*EthnicMinority_z| Borough,
+                                      cluster = "Borough",
+                                      data = london)
+
+
+
+
+etable(london_regression_1,
+  london_regression_1.1,
+  london_regression_1.2,
+  london_regression_1.3,
+  london_regression_1.4,
+  # order =  order,
+  tex = F,
+  style.tex = style.tex("base"),
+  digits = 3,
+  dict = vars,
+  signif.code = c("***" = 0.001, "**" = 0.01, "*" = 0.05, "." = 0.1, " " = 1)
+)
+
+
+
+
+etable(merseyside_regression_1,
+       merseyside_regression_1.1,
+       merseyside_regression_1.2,
+       merseyside_regression_1.3,
+       merseyside_regression_1.4,
+       # order =  order,
+       tex = F,
+       style.tex = style.tex("base"),
+       digits = 3,
+       dict = vars,
+       signif.code = c("***" = 0.001, "**" = 0.01, "*" = 0.05, "." = 0.1, " " = 1)
+)
+
+
+
+
+
+
+
+
+library(broom)
+library(dplyr)
+library(ggplot2)
+library(stringr)
+
+# Tidy the models and filter .theta
+tidy_merseyside <- broom::tidy(merseyside_regression_1.2, conf.int = TRUE) %>%
+  filter(term != ".theta") %>%
+  mutate(model = "Merseyside")
+
+tidy_london <- broom::tidy(london_regression_1.2, conf.int = TRUE) %>%
+  filter(term != ".theta") %>%
+  mutate(model = "London")
+
+# Combine datasets
+tidy_both <- bind_rows(tidy_merseyside, tidy_london)
+
+# Make term a factor ordered by estimate magnitude (optional)
+tidy_both$term <- factor(tidy_both$term, levels = rev(unique(tidy_both$term)))
+
+tidy_both <- tidy_both %>%
+  mutate(term = as.character(term)) %>%
+  mutate(term = str_replace_all(term, "CrimeDomainDecile", "Crime Domain Decile ")) %>%
+  mutate(term = factor(term, levels = unique(term))) %>%
+  arrange(desc(estimate))
+
+
+
+extra_rows <- tibble(
+  term = factor(c("Highest", levels(tidy_both$term), "Lowest"),
+                levels = c("Highest", levels(tidy_both$term), "Lowest")),
+  estimate = NA_real_,
+  conf.low = NA_real_,
+  conf.high = NA_real_,
+  model = NA_character_
+)
+
+plot_data <- bind_rows(
+  extra_rows[1,],      # Highest blank row on top
+  tidy_both,
+  extra_rows[3,]       # Lowest blank row on bottom
+)
+
+# Plot with dodging so models don’t overlap
+ggplot(tidy_both, aes(x = estimate, y = term, colour = model, shape = model)) +
+  geom_vline(xintercept = 0, linetype = "dashed", colour = "grey0") +
+  geom_point(position = position_dodge(width = 0.7), size = 4) +
+  geom_errorbarh(aes(xmin = conf.low, xmax = conf.high),
+                 position = position_dodge(width = 0.7), height = 0.2, size = 1.2) +  # thicker error bars
+  scale_colour_manual(values = c("London" = "#2C7BB6", "Merseyside" = "#D7191C")) +
+  scale_shape_manual(values = c("London" = 16, "Merseyside" = 17)) +  # circle, triangle
+  labs(title = "Coefficient Plot: Crime Deciles (1 = Most Crime)",
+       x = "Coefficient Estimate", y = NULL, colour = "Model", shape = "Model") +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    axis.text.y = element_text(size = 12)
+  )
 
 
