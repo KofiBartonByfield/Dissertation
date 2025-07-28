@@ -82,3 +82,94 @@ stargazer(london,
 
 stargazer(merseyside, 
           type = 'text')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# ==============================================================================
+#REDO
+
+
+
+merseyside <- dataset %>% 
+  filter(PoliceDept == "Merseyside")%>% 
+  dplyr::select(StopCount,
+                PopulationLSOA,
+                gini,
+                EthnicMinority, 
+                IncomeDomainScore,
+                CrimeDomainDecile,
+                DrugCrimeSum,
+                MeanHousePrice
+  )
+
+london <- dataset %>% 
+  filter(PoliceDept == "London")%>% 
+  dplyr::select(StopCount,
+                PopulationLSOA,
+                gini,
+                EthnicMinority, 
+                IncomeDomainScore,
+                CrimeDomainDecile,
+                DrugCrimeSum,
+                MeanHousePrice
+  )
+
+
+# Create the first table for London with label
+stargazer(london, 
+          type = 'latex', 
+          digits = 1, 
+          covariate.labels = c("Total Stop Count",
+                               "LSOA Population",
+                               "Gini",
+                               "Ethnic Minority Percentage",
+                               "Income Domain Score",
+                               "Crime Domain Decile",
+                               "Drug-Related Crime Count",
+                               "Mean House Price"),
+          out = "Figures/Regression Tables/Descriptive_Statistics_London.tex",
+          title = "Descriptive Statistics for Stop and Search Data in London",
+          label = "tab:descriptive_london"
+)
+
+# Create the second table for Merseyside with label
+stargazer(merseyside, 
+          type = 'latex', 
+          digits = 1,
+          covariate.labels = c("Total Stop Count",
+                               "LSOA Population",
+                               "Gini",
+                               "Ethnic Minority Percentage",
+                               "Income Domain Score",
+                               "Crime Domain Decile",
+                               "Drug-Related Crime Count",
+                               "Mean House Price"),
+          title = "Descriptive Statistics for Stop and Search Data in Merseyside",
+          label = "tab:descriptive_merseyside",
+          out = "Figures/Regression Tables/Descriptive_Statistics_Merseyside.tex"
+
+)
+
+
+
+
+
+
+
+
+stargazer(london, 
+          type = 'text')
+
+stargazer(merseyside, 
+          type = 'text')
