@@ -1,9 +1,12 @@
+rm(list = ls()) 
+
 library(dplyr)
 library(fixest)
 library(MASS)
 library(car)
 library(stargazer)
 
+out <- c('latex')
 
 dataset <- read.csv('Data/Data Sets/cleaned_dataset.csv')
 
@@ -22,23 +25,24 @@ head(london)
 
 
 # poisson model
-london_poisson_model <- glm(StopCount ~ gini+
-                                IncomeDomainScore_z + 
-                                 MeanHousePrice_z + 
-                                 CrimeSum_z + 
-                                 EthnicMinority_z + 
-                                 DrugCrimeSum_z,
+london_poisson_model <- glm(StopCount ~ 
+                              gini + 
+                              IncomeDomainScore_z + 
+                              MeanHousePrice_z +
+                              DrugCrimeSum_z +
+                              EthnicMinority_z+
+                              CrimeDomainDecile,
                      data = london, 
                      family = poisson)
 
 # negative binomial
 london_negbin_model <- glm.nb(StopCount ~ 
-                              gini + 
-                              IncomeDomainScore_z + 
-                              MeanHousePrice_z + 
-                              CrimeSum_z + 
-                              EthnicMinority_z + 
-                              DrugCrimeSum_z,
+                                gini + 
+                                IncomeDomainScore_z + 
+                                MeanHousePrice_z +
+                                DrugCrimeSum_z +
+                                EthnicMinority_z+
+                                CrimeDomainDecile,
                        data = london)
 
 
@@ -82,7 +86,7 @@ l_comparison_table <- data.frame(
 
 
 stargazer(l_comparison_table,
-          type = 'text',
+          type = out,
           summary = FALSE,
           rownames = FALSE,
           title = "Model Fit Comparison: London",
@@ -97,19 +101,23 @@ stargazer(l_comparison_table,
 
 
 # negative binomial
-london_negbin_model <- fenegbin(StopCount ~ gini + IncomeDomainScore_z + 
-                           MeanHousePrice_z + 
-                           CrimeSum_z + 
-                           EthnicMinority_z + 
-                           DrugCrimeSum_z,
+london_negbin_model <- fenegbin(StopCount ~ 
+                                  gini + 
+                                  IncomeDomainScore_z + 
+                                  MeanHousePrice_z +
+                                  DrugCrimeSum_z +
+                                  EthnicMinority_z+
+                                  CrimeDomainDecile,
                          data = london)
 
 # fe negative binomial
-london_fe_negbin_model <- fenegbin(StopCount ~ gini + IncomeDomainScore_z + 
-                                         MeanHousePrice_z + 
-                                         CrimeSum_z + 
-                                         EthnicMinority_z + 
-                                         DrugCrimeSum_z | Borough,
+london_fe_negbin_model <- fenegbin(StopCount ~ 
+                                     gini + 
+                                     IncomeDomainScore_z + 
+                                     MeanHousePrice_z +
+                                     DrugCrimeSum_z +
+                                     EthnicMinority_z+
+                                     CrimeDomainDecile | Borough,
                             data = london)
 
 
@@ -185,7 +193,7 @@ colnames(comparison_df) <- c("No Fixed Effects", "With Fixed Effects")
 stargazer(comparison_df, 
           summary = FALSE,
           rownames = TRUE,
-          type = "text",
+          type = out,
           title = "Fixed Effects Model Fit Statistics: London",
           dep.var.caption = "",
           dep.var.labels.include = FALSE)
@@ -212,23 +220,23 @@ stargazer(comparison_df,
 
 # poisson model
 merseyside_poisson_model <- glm(StopCount ~ 
-                                gini + 
-                                IncomeDomainScore_z + 
-                                MeanHousePrice_z + 
-                                CrimeSum_z + 
-                                EthnicMinority_z + 
-                                DrugCrimeSum_z,
+                                  gini + 
+                                  IncomeDomainScore_z + 
+                                  MeanHousePrice_z +
+                                  DrugCrimeSum_z +
+                                  EthnicMinority_z+
+                                  CrimeDomainDecile,
                             data = merseyside, 
                             family = poisson)
 
 # negative binomial
 merseyside_negbin_model <- glm.nb(StopCount ~ 
-                                  gini + 
-                                  IncomeDomainScore_z + 
-                                  MeanHousePrice_z + 
-                                  CrimeSum_z + 
-                                  EthnicMinority_z + 
-                                  DrugCrimeSum_z,
+                                    gini + 
+                                    IncomeDomainScore_z + 
+                                    MeanHousePrice_z +
+                                    DrugCrimeSum_z +
+                                    EthnicMinority_z+
+                                    CrimeDomainDecile,
                               data = merseyside)
 
 
@@ -270,7 +278,7 @@ m_comparison_table <- data.frame(
 )
 
 stargazer(m_comparison_table,
-          type = 'text',
+          type = out,
           summary = FALSE,
           rownames = FALSE,
           title = "Model Fit Comparison: Merseyside",
@@ -301,19 +309,23 @@ stargazer(m_comparison_table,
 
 
 # negative binomial
-merseyside_negbin_model <- fenegbin(StopCount ~ gini + IncomeDomainScore_z + 
-                                  MeanHousePrice_z + 
-                                  CrimeSum_z + 
-                                  EthnicMinority_z + 
-                                  DrugCrimeSum_z,
+merseyside_negbin_model <- fenegbin(StopCount ~ 
+                                      gini + 
+                                      IncomeDomainScore_z + 
+                                      MeanHousePrice_z +
+                                      DrugCrimeSum_z +
+                                      EthnicMinority_z+
+                                      CrimeDomainDecile,
                                 data = merseyside)
 
 # fe negative binomial
-merseyside_fe_negbin_model <- fenegbin(StopCount ~ gini + IncomeDomainScore_z + 
-                                     MeanHousePrice_z + 
-                                     CrimeSum_z + 
-                                     EthnicMinority_z + 
-                                     DrugCrimeSum_z | Borough,
+merseyside_fe_negbin_model <- fenegbin(StopCount ~ 
+                                        gini + 
+                                        IncomeDomainScore_z + 
+                                        MeanHousePrice_z +
+                                        DrugCrimeSum_z +
+                                        EthnicMinority_z+
+                                        CrimeDomainDecile | Borough,
                                    data = merseyside)
 
 
@@ -372,7 +384,7 @@ colnames(comparison_df) <- c("No Fixed Effects", "With Fixed Effects")
 stargazer(comparison_df, 
           summary = FALSE,
           rownames = TRUE,
-          type = "text",
+          type = out,
           title = "Fixed Effects Model Fit Statistics: Merseyside",
           dep.var.caption = "",
           dep.var.labels.include = FALSE)
