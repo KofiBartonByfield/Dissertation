@@ -745,7 +745,7 @@ crime_plot <- ggplot(tidy_both_combined, aes(x = estimate, y = term, colour = mo
       )
     ) +
     labs(title = "Coefficient Plot: Crime Domain Deciles",
-         x = "Coefficient Estimate", y = NULL, colour = "Location", shape = "Location") +
+         x = "Percentage Change in Expected Count", y = NULL, colour = "Location", shape = "Location") +
     theme_minimal() +
     theme(
       legend.position = "bottom",
@@ -762,6 +762,44 @@ ggsave("Figures/Graphs/Crime_Decile_Plot.png", plot = crime_plot, width = 10, he
 
 
 
+
+
+
+
+
+
+coef_plot <- ggplot(df_all, aes(x = percent_change, y = term, colour = region, shape = region)) +
+  geom_point(position = position_dodge(width = 0.6), size = 4, alpha = 0.85) +
+  geom_errorbarh(aes(xmin = conf.low.pc, xmax = conf.high.pc),
+                 position = position_dodge(width = 0.6), height = 0.25, linewidth = 0.8) +
+  geom_vline(xintercept = 0, linetype = "dashed", colour = "grey60") +
+  scale_colour_manual(values = c("London" = "#2C7BB6", "Merseyside" = "#D7191C")) +
+  scale_shape_manual(values = c("London" = 16, "Merseyside" = 17)) +  # 16 = solid circle, 17 = solid triangle
+  scale_y_discrete(labels = custom_names) +
+  labs(
+    x = "Percentage Change in Expected Count",
+    y = NULL,
+    colour = "Region",
+    shape = "Region",
+    title = "Regression Coefficients: London vs Merseyside"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    axis.text.y = element_text(face = "bold"),
+    axis.title.x = element_text(face = "bold"),
+    plot.title = element_text(face = "bold", size = 16, hjust = 0.5, margin = margin(b = 15)),
+    legend.position = "right",
+    legend.title = element_text(face = "bold"),
+    legend.text = element_text(size = 12)
+  )
+
+
+coef_plot
+
+
+
+
+ggsave("Figures/Graphs/Coefficient_Graph.png", plot = coef_plot, width = 10, height = 6, dpi = 300)
 
 
 
