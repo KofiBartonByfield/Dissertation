@@ -722,11 +722,11 @@ new_levels <- c(
 tidy_both_combined <- tidy_both_combined %>%
   # mutate(term = factor(term, levels = rev(new_levels)))
   mutate(term = factor(term, levels = new_levels))%>%
-  mutate(across(c(estimate, conf.low, conf.high), exp))
+  mutate((across(c(estimate, conf.low, conf.high), exp)-1)* 100)
 
 
 crime_plot <- ggplot(tidy_both_combined, aes(x = estimate, y = term, colour = model, shape = model)) +
-    geom_vline(xintercept = 1, linetype = "dashed", colour = "grey0") +
+    geom_vline(xintercept = 0, linetype = "dashed", colour = "grey0") +
     geom_point(position = position_dodge(width = 0.7), size = 4, na.rm = TRUE) +
     geom_errorbarh(aes(xmin = conf.low, xmax = conf.high),
                    position = position_dodge(width = 0.7), height = 0.2, size = 1.2, na.rm = TRUE) +
@@ -763,41 +763,43 @@ ggsave("Figures/Graphs/Crime_Decile_Plot.png", plot = crime_plot, width = 10, he
 
 
 
+# ------------------------------------------------------------------------------
+
+
+tidy_both_filtered <- tidy_both %>%
+  filter(!str_detect(term, "CrimeDomainDecile")) %>%
+  mutate((across(c(estimate, conf.low, conf.high), exp)-1)* 100)
 
 
 
+custom_names <- c(
+  gini = "Gini Coefficient",
+  IncomeDomainScore_z = "Income Deprivation (z)",
+  MeanHousePrice_z = "Mean House Price (z)",
+  CrimeSum_z = "Crime Sum (z)",
+  EthnicMinority_z = "Ethnic Minority (z)",
+  DrugCrimeSum_z = "Drug Crime Sum (z)")
 
 
-coef_plot <- ggplot(df_all, aes(x = percent_change, y = term, colour = region, shape = region)) +
+coef_plot <- ggplot(tidy_both_filtered, aes(x = estimate, y = term, colour = model, shape = model)) +
   geom_point(position = position_dodge(width = 0.6), size = 4, alpha = 0.85) +
-  geom_errorbarh(aes(xmin = conf.low.pc, xmax = conf.high.pc),
+  geom_errorbarh(aes(xmin = conf.low, xmax = conf.high),
                  position = position_dodge(width = 0.6), height = 0.25, linewidth = 0.8) +
   geom_vline(xintercept = 0, linetype = "dashed", colour = "grey60") +
   scale_colour_manual(values = c("London" = "#2C7BB6", "Merseyside" = "#D7191C")) +
   scale_shape_manual(values = c("London" = 16, "Merseyside" = 17)) +  # 16 = solid circle, 17 = solid triangle
   scale_y_discrete(labels = custom_names) +
-  labs(
-    x = "Percentage Change in Expected Count",
-    y = NULL,
-    colour = "Region",
-    shape = "Region",
-    title = "Regression Coefficients: London vs Merseyside"
-  ) +
-  theme_minimal(base_size = 14) +
+  labs(title = "Coefficient Plot",
+       x = "Percentage Change in Expected Count", y = NULL, colour = "Location", shape = "Location") +
+  theme_minimal() +
   theme(
-    axis.text.y = element_text(face = "bold"),
-    axis.title.x = element_text(face = "bold"),
-    plot.title = element_text(face = "bold", size = 16, hjust = 0.5, margin = margin(b = 15)),
-    legend.position = "right",
-    legend.title = element_text(face = "bold"),
-    legend.text = element_text(size = 12)
+    legend.position = "bottom",
+    axis.text.y = element_text(size = 12)
   )
 
 
+
 coef_plot
-
-
-
 
 ggsave("Figures/Graphs/Coefficient_Graph.png", plot = coef_plot, width = 10, height = 6, dpi = 300)
 
