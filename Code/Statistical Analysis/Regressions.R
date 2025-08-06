@@ -550,8 +550,8 @@ vars <- c(
 
 
 etable(merseyside_regression_1,
-  merseyside_regression_1.1,
-  merseyside_regression_1.2,
+  # merseyside_regression_1.1,
+  # merseyside_regression_1.2,
   merseyside_regression_1.3,
   merseyside_regression_1.4,
   tex = T,
@@ -617,8 +617,8 @@ london_regression_1.4 <- fenegbin(StopCount ~
 
 
 etable(london_regression_1,
-  london_regression_1.1,
-  london_regression_1.2,
+  # london_regression_1.1,
+  # london_regression_1.2,
   london_regression_1.3,
   london_regression_1.4,
   tex = T,
