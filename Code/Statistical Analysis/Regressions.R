@@ -728,8 +728,10 @@ tidy_both_combined <- tidy_both_combined %>%
 crime_plot <- ggplot(tidy_both_combined, aes(x = estimate, y = term, colour = model, shape = model)) +
     geom_vline(xintercept = 0, linetype = "dashed", colour = "grey0") +
     geom_point(position = position_dodge(width = 0.7), size = 4, na.rm = TRUE) +
-    geom_errorbarh(aes(xmin = conf.low, xmax = conf.high),
-                   position = position_dodge(width = 0.7), height = 0.2, size = 1.2, na.rm = TRUE) +
+    # geom_errorbarh(aes(xmin = conf.low, xmax = conf.high),
+    #                position = position_dodge(width = 0.7), height = 0.2, size = 1.2, na.rm = TRUE) +
+  geom_errorbarh(aes(xmin = conf.low, xmax = conf.high),
+                 position = position_dodge(width = 0.6), height = 0.25, linewidth = 0.8) +
     scale_colour_manual(
       values = c(
         "London" = "#2C7BB6",
