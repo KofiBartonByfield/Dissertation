@@ -13,7 +13,7 @@ The dissertation explores how structural inequalities measured through income de
 - `Data/`: Cleaned and processed datasets used in the analysis.
 - `Documents/`: Backups and drafts of the dissertation manuscript.
 - `Figures/`: All generated figures and visualisations used in the dissertation.
-- Dissertation.pdf
+- `Dissertation.pdf`
 - `README.md`: This file.
 
 ## Key Components
